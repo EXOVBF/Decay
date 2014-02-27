@@ -1,6 +1,10 @@
 Decay
 =====
 
+THIS FILE WILL SELFDEStrUCT IN FIVE SECONDS
+
+
+
  * hadronize events with Pythia8
  * decay and hadronize events with Pythia8
  
