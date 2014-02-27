@@ -1,14 +1,8 @@
 Decay
 =====
 
-THIS FILE WILL SELFDEStrUCT IN FIVE SECONDS
-
-
-
  * hadronize events with Pythia8
  * decay and hadronize events with Pythia8
- 
- 
  
 
 _be sure not to have CMSSW environment loaded for the following operations, it is screwing up librairies for runtime_
@@ -48,3 +42,8 @@ _be sure not to have CMSSW environment loaded for the following operations, it i
         ./main98.exe   /tmp/amassiro/TT_CT10_13TeV-powheg-reduced.lhe     /tmp/amassiro/test-ttbar.lhe.hepmc
         ./main98.exe   /tmp/amassiro/TT_CT10_13TeV-powheg-reduced.lhe     /tmp/amassiro/test-ttbar.lhe.hepmc   13    0     1000
 
+
+# Run with the precompiled version of Pythia8 present on lxplus
+
+  * setup_slc6.sh: to be sourced to get the Pythia8 environment
+  * then to compile look at the compilation command at the top of unit_00.cpp as an example
