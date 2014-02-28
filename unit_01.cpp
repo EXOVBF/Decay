@@ -56,9 +56,10 @@ int main(int argc, char **argv)
 	// Allow for possibility of a few faulty events.
 	int nAbort = 10;
 	int iAbort = 0;
+    int iEvent = 0;
 
 	// Begin event loop; generate until none left in input file.     
-	for (int iEvent = 0; ; ++iEvent) 
+	while (iAbort <= nAbort) 
 	{
         if (!(iEvent%500)) std::cout<<"####### EVENT = " << iEvent << std::endl;	
 		// Generate events, and check whether generation failed.
@@ -67,8 +68,8 @@ int main(int argc, char **argv)
 		// If failure because reached end of file then exit event loop.
 	    	if (pythia.info.atEndOfFile()) break; 
 		// First few failures write off as "acceptable" errors, then quit.
-			if (++iAbort < nAbort) continue;
-		    break;
+//			if (++iAbort < nAbort) continue;
+//		    break;
         }
         // construct new HepMC event setting units.
         HepMC::GenEvent* hepmcevt = new HepMC::GenEvent(HepMC::Units::GEV, HepMC::Units::MM);
@@ -78,12 +79,12 @@ int main(int argc, char **argv)
         // Write the HepMC event to file. Done with it.
         hepmc_file_out << hepmcevt;
         //human_file_out << hepmcevt;
-  
+    
         delete hepmcevt;
+        iEvent++;
   		// End of event loop.        
   	}                                           
-	// Give statistics. Print histogram.
-	//pythia.statistics();
+    cout << "############### total simulated event:   " << iEvent << "   ###############" << endl;
 	// Done.                           
 	return 0;
 }
