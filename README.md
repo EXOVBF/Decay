@@ -46,4 +46,5 @@ _be sure not to have CMSSW environment loaded for the following operations, it i
 # Run with the precompiled version of Pythia8 present on lxplus
 
   * setup_slc6.sh: to be sourced to get the Pythia8 environment
-  * then to compile look at the compilation command at the top of unit_00.cpp as an example
+  * then to compile look at the compilation command at the top of unit_01.cpp as an example
+  * execute an example with_ ./unit_01.exe test_file-lhe test_output.dat
