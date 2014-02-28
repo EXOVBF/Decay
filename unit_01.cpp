@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 {
     if (argc < 3) 
     {
-        std::cerr << " Not enough input information!  no input file!" << std::endl;
+        std::cerr << " Not enough input information!  no input/output file!" << std::endl;
         exit (0);
     }
  
