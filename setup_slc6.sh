@@ -1,7 +1,8 @@
 #!/bin/sh
 
 
-source /afs/cern.ch/sw/lcg/contrib/gcc/4.6/x86_64-slc6-gcc46-opt/setup.sh 
+source /afs/cern.ch/sw/lcg/contrib/gcc/4.6/x86_64-slc6-gcc46-opt/setup.sh
+source /afs/cern.ch/sw/lcg/app/releases/ROOT/5.34.09/x86_64-slc6-gcc46-opt/root/bin/thisroot.sh
 export LD_LIBRARY_PATH=/afs/cern.ch/sw/lcg/external/MCGenerators_lcgcmt66/pythia8/183/x86_64-slc6-gcc46-opt/lib/:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/afs/cern.ch/sw/lcg/external/HepMC/2.06.08/x86_64-slc6-gcc46-opt/lib/:$LD_LIBRARY_PATH
 export PATH=/afs/cern.ch/sw/lcg/external/MCGenerators_lcgcmt66/pythia8/183/x86_64-slc6-gcc46-opt/bin/:$PATH
