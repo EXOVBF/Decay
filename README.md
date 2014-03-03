@@ -47,4 +47,4 @@ _be sure not to have CMSSW environment loaded for the following operations, it i
 
   * setup_slc6.sh: to be sourced to get the Pythia8 environment
   * then to compile look at the compilation command at the top of unit_01.cpp as an example
-  * execute an example with:   ``` ./unit_01.exe test_file.lhe test_output.dat```
+  * execute an example with:        ./unit_01.exe test_file.lhe test_output.dat

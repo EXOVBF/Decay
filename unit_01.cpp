@@ -5,6 +5,7 @@
 //****************************************************************************************************************************
 
 // just for back-compatibility
+
 #ifdef PYTHIA8176
 #include "Pythia.h"
 #include "HepMCInterface.h"
@@ -28,6 +29,10 @@ int main(int argc, char **argv)
         std::cerr << " Not enough input information!  no input/output file!" << std::endl;
         exit (0);
     }
+    int startEntry = 0;
+    if (argc >= 4) startEntry = atoi(argv[3]);
+    int endEntry = -1;
+    if (argc >= 5) endEntry   = atoi(argv[4]);
  
     std::string namefile_in;
     namefile_in = argv[1];
@@ -54,37 +59,43 @@ int main(int argc, char **argv)
 //    HepMC::IO_AsciiParticles human_file_out(namefile_easy_out.c_str(), std::ios::out);
 
 	// Allow for possibility of a few faulty events.
-	int nAbort = 10;
 	int iAbort = 0;
-    int iEvent = 0;
+	int totEvent = 0;
 
 	// Begin event loop; generate until none left in input file.     
-	while (iAbort <= nAbort) 
+	for (int iEvent = 0; ; ++iEvent)
 	{
-        if (!(iEvent%500)) std::cout<<"####### EVENT = " << iEvent << std::endl;	
-		// Generate events, and check whether generation failed.
-		if (!pythia.next()) 
-		{
-		// If failure because reached end of file then exit event loop.
-	    	if (pythia.info.atEndOfFile()) break; 
-		// First few failures write off as "acceptable" errors, then quit.
-//			if (++iAbort < nAbort) continue;
-//		    break;
-        }
-        // construct new HepMC event setting units.
-        HepMC::GenEvent* hepmcevt = new HepMC::GenEvent(HepMC::Units::GEV, HepMC::Units::MM);
-        // fill the event including PDF infos
-        ToHepMC.fill_next_event( pythia, hepmcevt );
+                //---- subrange of events ----
+        if (endEntry!=-1 && iEvent>=endEntry) break;
+        if (iEvent >= startEntry)
+        {
+        	if (!(iEvent%500)) std::cout<<"####### EVENT = " << iEvent << std::endl;	
+        			// Generate events, and check whether generation failed.
+            if (!pythia.next()) 
+		    {
+		    // If failure because reached end of file then exit event loop.
+	    	    if (pythia.info.atEndOfFile()) break; 
+		    // First few failures write off as "acceptable" errors, then quit.
+			    //if (++iAbort < nAbort) continue;
+		        //break;
+		        iAbort++;
+            }
+
+                // construct new HepMC event setting units.
+                HepMC::GenEvent* hepmcevt = new HepMC::GenEvent(HepMC::Units::GEV, HepMC::Units::MM);
+                // fill the event including PDF infos
+                ToHepMC.fill_next_event( pythia, hepmcevt );
   
-        // Write the HepMC event to file. Done with it.
-        hepmc_file_out << hepmcevt;
-        //human_file_out << hepmcevt;
+                // Write the HepMC event to file. Done with it.
+                hepmc_file_out << hepmcevt;
+                //human_file_out << hepmcevt;
     
-        delete hepmcevt;
-        iEvent++;
-  		// End of event loop.        
+                delete hepmcevt;
+                totEvent++;
+        }
+ 	    // End of event loop.        
   	}                                           
-    cout << "############### total simulated event:   " << iEvent << "   ###############" << endl;
+    cout << "############### total simulated event:   " << totEvent << "   Fail:   " << iAbort << "   ###############" << endl;
 	// Done.                           
 	return 0;
 }
