@@ -26,7 +26,7 @@ bool lhe_event_preselection(Event* event)
       outQuark.push_back(particle);
     }
   }
-  if(outQuark.size() < 5)
+  if(outQuark.size() < 3)
   {
     return false;
   }
@@ -59,7 +59,7 @@ int main() {
   pythia.init("../MC_data/signal_lvj/MGraviton_2500.lhe");       
 
   // Allow for possibility of a few faulty events.
-  int nAbort = 10;
+  int skippedEvents = 0;
   int iAbort = 0;
 
   // Begin event loop; generate until none left in input file.     
@@ -89,17 +89,27 @@ int main() {
         }
       }
     }
+    else
+    {
+      if(pythia.LHAeventSkip(1))
+      {
+        skippedEvents++;
+      }
+    }
+    cout << "### skipped:  " << skippedEvents << endl;     
     // List first few events: Les Houches, hard process and complete.
 	
 	  if (iEvent < nPrint) 
 	  {     
-      cout << endl << "########## EVENT:  " << iEvent << endl;
-      pythia.LHAeventList();               
+        cout << endl << "########## EVENT:  " << iEvent << endl;
+        pythia.LHAeventList();               
      	pythia.info.list();          
      	pythia.process.list();          
      	pythia.event.list();           
     }
-  // End of event loop.        
+  // End of event loop. do event by event.        
+  int help;
+  cin >> help;
   }                          
   cout << "### failed:  " << iAbort << endl;                                           
 
