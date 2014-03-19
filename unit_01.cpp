@@ -1,6 +1,6 @@
 //****************************************************************************************************************************
 
-// on slc6: compile with -----> c++ -O2 -ansi -pedantic -W -Wall -I /afs/cern.ch/sw/lcg/external/HepMC/2.06.08/x86_64-slc6-gcc46-opt/include/ -L /afs/cern.ch/sw/lcg/external/HepMC/2.06.08/x86_64-slc6-gcc46-opt/lib -lHepMC -lpythia8tohepmc `pythia8-config --cxxflags --libs --ldflags` -o unit_01.exe unit_01.cpp
+// on slc6: compile with -----> c++ -O2 -lm -I /afs/cern.ch/sw/lcg/external/HepMC/2.06.08/x86_64-slc6-gcc46-opt/include/ -L /afs/cern.ch/sw/lcg/external/HepMC/2.06.08/x86_64-slc6-gcc46-opt/lib -lHepMC -lpythia8tohepmc `pythia8-config --cxxflags --libs --ldflags` -o unit_01.exe unit_01.cpp
 
 //****************************************************************************************************************************
 
@@ -29,10 +29,6 @@ int main(int argc, char **argv)
         std::cerr << " Not enough input information!  no input/output file!" << std::endl;
         exit (0);
     }
-    int startEntry = 0;
-    if (argc >= 4) startEntry = atoi(argv[3]);
-    int endEntry = -1;
-    if (argc >= 5) endEntry   = atoi(argv[4]);
  
     std::string namefile_in;
     namefile_in = argv[1];
@@ -43,8 +39,24 @@ int main(int argc, char **argv)
     
 
 	// Initialize Les Houches Event File run. List initialization information.
-	Pythia pythia;                           
-    std::string sfile = "Beams:LHEF ="+namefile_in;    
+	Pythia pythia;
+    std::string sSeed = "0";
+    int startEntry = 0;
+    if (argc >= 4) 
+    {
+        startEntry = atoi(argv[3]);
+        sSeed = argv[3];
+    }
+    int endEntry = -1;
+    if (argc >= 5) 
+    {
+        endEntry   = atoi(argv[4]);                           
+    }
+    std::string sfile = "Beams:LHEF ="+namefile_in;
+    std::string sRandomSeed = "Random:seed = "+sSeed;
+    //--- random seed from start event number
+    pythia.readString("Random:setSeed = on");
+    pythia.readString(sRandomSeed.c_str());    
     pythia.readString("Beams:frameType = 4");
    	pythia.readString("HadronLevel:Hadronize = on");
 	pythia.readString(sfile.c_str());      
@@ -56,7 +68,7 @@ int main(int argc, char **argv)
     // Specify file where HepMC events will be stored.
     HepMC::IO_GenEvent hepmc_file_out(namefile_out.c_str(), std::ios::out);
     // Alternative output format -----> just for test 
-//    HepMC::IO_AsciiParticles human_file_out(namefile_easy_out.c_str(), std::ios::out);
+    HepMC::IO_AsciiParticles human_file_out(namefile_easy_out.c_str(), std::ios::out);
 
 	// Allow for possibility of a few faulty events.
 	int iAbort = 0;
@@ -88,7 +100,7 @@ int main(int argc, char **argv)
   
                 // Write the HepMC event to file. Done with it.
                 hepmc_file_out << hepmcevt;
-                //human_file_out << hepmcevt;
+                human_file_out << hepmcevt;
     
                 delete hepmcevt;
                 totEvent++;

@@ -1,6 +1,7 @@
 //****************************************************************************************************************************
 
-// compile with -----> c++ -O2 -ansi -pedantic -W -Wall `pythia8-config --cxxflags --libs --ldflags` -o unit_00.exe unit_00.ccp
+// base program with Pythia8
+// compile with -----> c++ -O2 -ansi -pedantic -W -Wall `pythia8-config --cxxflags --libs --ldflags` -o unit_00.exe unit_00.cpp
 
 //****************************************************************************************************************************
 
@@ -23,7 +24,7 @@ int main() {
   pythia.readString("HadronLevel:Hadronize = on"); 
 
   // Initialize Les Houches Event File run. List initialization information.
-  pythia.init("test.lhe");      
+  pythia.init("../MC_data/signal_lvj/MGraviton_2500.lhe");      
 
   // Allow for possibility of a few faulty events.
   int nAbort = 10;
