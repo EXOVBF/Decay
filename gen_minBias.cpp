@@ -24,7 +24,7 @@ using namespace std;
 
 //********************************************************************************************
 
-int main(int argc, char* argv) 
+int main(int argc, char** argv) 
 {
 	Pythia pythia;
 
@@ -45,13 +45,13 @@ int main(int argc, char* argv)
 
 	pythia.init();
 
-    string outFile = "/afs/cern.ch/user/s/spigazzi/work/DelphesStuff/minBias/minBias_8TeV_500K_";
+    string outFile = "/afs/cern.ch/user/s/spigazzi/work/EXOVBF/MC_Data/minBias/minBias_8TeV_500K_";
 	outFile += argv[1];
 	outFile += ".hepmc";
 	HepMC::IO_GenEvent hepmc_file_out(outFile, std::ios::out);
 	HepMCConverter ToHepMC;
 	
-	for (int iEvent = 0; iEvent < 50000; ++iEvent)
+	for (int iEvent = 0; iEvent < 5000; ++iEvent)
 	{
 		if(iEvent%1000 == 0) 
 		{
