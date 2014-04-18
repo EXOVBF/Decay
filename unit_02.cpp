@@ -5,7 +5,7 @@
 
 ****************************************************************************************************************************/
 
-#include "Pythia8/Pythia.h"
+#include "Pythia.h"
 #include <vector>
 
 using namespace Pythia8; 

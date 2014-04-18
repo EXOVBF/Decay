@@ -1,18 +1,18 @@
 /****************************************************************************************************************************
 
         this program create a sample on minimum bias events for LHC-8TeV
-        compile with ----->c++ -O2 -lm -I /afs/cern.ch/sw/lcg/external/HepMC/2.06.08/x86_64-slc6-gcc46-opt/include/ -L /afs/cern.ch/sw/lcg/external/HepMC/2.06.08/x86_64-slc6-gcc46-opt/lib -I /afs/cern.ch/sw/lcg/external/MCGenerators/lhapdf/5.8.9/x86_64-slc6-gcc46-opt/include/ -L /afs/cern.ch/sw/lcg/external/MCGenerators/lhapdf/5.8.9/x86_64-slc6-gcc46-opt/lib/ -lHepMC -lpythia8tohepmc -lLHAPDF `pythia8-config --cxxflags --libs --ldflags`  -o gen_minBias.exe gen_minBias.cpp
+        compile with ----->c++ -O2 -lm -I /afs/cern.ch/sw/lcg/external/HepMC/2.06.08/x86_64-slc6-gcc46-opt/include/ -L /afs/cern.ch/sw/lcg/external/HepMC/2.06.08/x86_64-slc6-gcc46-opt/lib -I /afs/cern.ch/sw/lcg/external/MCGenerators/lhapdf/5.8.9/x86_64-slc6-gcc46-opt/include/ -L /afs/cern.ch/sw/lcg/external/MCGenerators/lhapdf/5.8.9/x86_64-slc6-gcc46-opt/lib/ -I /afs/cern.ch/cms/slc6_amd64_gcc472/external/pythia8/175-cms2/include/ -L /afs/cern.ch/cms/slc6_amd64_gcc472/external/pythia8/175-cms2/lib/ -lHepMC -lhepmcinterface -lpythia8 -lLHAPDF -o gen_minBias.exe gen_minBias.cpp
 
 ****************************************************************************************************************************/
 
 #ifdef pythia176
 #include "Pythia.h"
 #include "HepMCInterface.h"
-#define HepMCConverter HepMC::I_Pythia
+#define HepMCConverter HepMC::I_Pythia8
 #else
-#include "Pythia8/Pythia.h"
-#include "Pythia8/Pythia8ToHepMC.h"
-#define HepMCConverter HepMC::Pythia8ToHepMC
+#include "Pythia.h"
+#include "HepMCInterface.h"
+#define HepMCConverter HepMC::I_Pythia8
 #endif
 
 #include "HepMC/GenEvent.h"
@@ -28,16 +28,19 @@ int main(int argc, char** argv)
 {
 	Pythia pythia;
 
-// Configure                                                                                                                                           
-	pythia.readString("SoftQCD:inelastic = on");
+// Configure                           
+    //--- only minimum bias, non diffractive events (jets eta distribution problem)      
+	//pythia.readString("SoftQCD:all = on");
+	pythia.readString("SoftQCD:minBias = on");
 	pythia.readString("HadronLevel:Hadronize = on");
-//	pythia.readString("SoftQCD:nonDiffractive = on");
 
 	pythia.readString("Random:seed = 0");
+	pythia.readString("Random:setSeed = on");
 	pythia.readString("Beams:idA = 2212");
 	pythia.readString("Beams:idB = 2212");
 	pythia.readString("Beams:eA = 4000.");
 	pythia.readString("Beams:eB = 4000.");
+	pythia.readString("Beams:eCM = 8000.");
 	pythia.readString("PDF:useLHAPDF = on");
 	pythia.readString("PDF:LHAPDFset = cteq61.LHpdf");
 
@@ -45,15 +48,15 @@ int main(int argc, char** argv)
 
 	pythia.init();
 
-    string outFile = "/afs/cern.ch/user/s/spigazzi/work/EXOVBF/MC_Data/minBias/minBias_8TeV_500K_";
+    string outFile = "/afs/cern.ch/user/s/spigazzi/work/EXOVBF/MC_Data/minBias/minBias_8TeV_1M_";
 	outFile += argv[1];
 	outFile += ".hepmc";
 	HepMC::IO_GenEvent hepmc_file_out(outFile, std::ios::out);
 	HepMCConverter ToHepMC;
 	
-	for (int iEvent = 0; iEvent < 5000; ++iEvent)
+	for (int iEvent = 0; iEvent < 100000; ++iEvent)
 	{
-		if(iEvent%1000 == 0) 
+		if(iEvent%10000 == 0) 
 		{
 			cout << "Events:  " << iEvent << endl;
 		}
